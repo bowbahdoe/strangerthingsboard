@@ -2,70 +2,78 @@ module Types exposing (..)
 
 import Browser exposing (UrlRequest)
 import Browser.Navigation exposing (Key)
+import Time
 import Url exposing (Url)
 
 
+type Activation
+    = NotActivated
+    | ActivatedAt Time.Posix
+
+
 type alias AlphabetBoard =
-    { a : Bool
-    , b : Bool
-    , c : Bool
-    , d : Bool
-    , e : Bool
-    , f : Bool
-    , g : Bool
-    , h : Bool
-    , i : Bool
-    , j : Bool
-    , k : Bool
-    , l : Bool
-    , m : Bool
-    , n : Bool
-    , o : Bool
-    , p : Bool
-    , q : Bool
-    , r : Bool
-    , s : Bool
-    , t : Bool
-    , u : Bool
-    , v : Bool
-    , w : Bool
-    , x : Bool
-    , y : Bool
-    , z : Bool
+    { a : Activation
+    , b : Activation
+    , c : Activation
+    , d : Activation
+    , e : Activation
+    , f : Activation
+    , g : Activation
+    , h : Activation
+    , i : Activation
+    , j : Activation
+    , k : Activation
+    , l : Activation
+    , m : Activation
+    , n : Activation
+    , o : Activation
+    , p : Activation
+    , q : Activation
+    , r : Activation
+    , s : Activation
+    , t : Activation
+    , u : Activation
+    , v : Activation
+    , w : Activation
+    , x : Activation
+    , y : Activation
+    , z : Activation
     }
 
 
 type alias FrontendModel =
-    AlphabetBoard
+    { board : AlphabetBoard
+    , time : Maybe Time.Posix
+    }
 
 
 defaultBoard =
-    { a = True
-    , b = False
-    , c = False
-    , d = False
-    , e = False
-    , f = False
-    , g = False
-    , h = False
-    , i = False
-    , j = False
-    , k = False
-    , l = False
-    , m = False
-    , n = False
-    , o = False
-    , p = False
-    , q = False
-    , r = False
-    , s = False
-    , t = False
-    , u = False
-    , v = False
-    , w = False
-    , x = False
-    , y = False
-    , z = False
+    { a = NotActivated
+    , b = NotActivated
+    , c = NotActivated
+    , d = NotActivated
+    , e = NotActivated
+    , f = NotActivated
+    , g = NotActivated
+    , h = NotActivated
+    , i = NotActivated
+    , j = NotActivated
+    , k = NotActivated
+    , l = NotActivated
+    , m = NotActivated
+    , n = NotActivated
+    , o = NotActivated
+    , p = NotActivated
+    , q = NotActivated
+    , r = NotActivated
+    , s = NotActivated
+    , t = NotActivated
+    , u = NotActivated
+    , v = NotActivated
+    , w = NotActivated
+    , x = NotActivated
+    , y = NotActivated
+    , z = NotActivated
     }
 
 
@@ -77,7 +85,9 @@ type alias BackendModel =
 type FrontendMsg
     = UrlClicked UrlRequest
     | UrlChanged Url
-    | ClickedOnFrontend Char
+    | TypedOnFrontend Char
+    | GotTime Time.Posix
+    | NoOpFrontend
 
 
 type ToBackend
@@ -87,7 +97,9 @@ type ToBackend
 
 type BackendMsg
     = NoOpBackendMsg
+    | Flip Char Time.Posix
 
 
 type ToFrontend
     = NewBoard AlphabetBoard
+    | Log BackendModel
