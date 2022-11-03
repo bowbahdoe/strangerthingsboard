@@ -28,7 +28,7 @@ orange =
 
 
 lightOnDurationMs =
-    1000
+    Types.lightOnDurationMs
 
 
 light : String -> Time.Posix -> Types.Activation -> Attribute a

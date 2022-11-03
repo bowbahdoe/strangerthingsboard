@@ -11,6 +11,10 @@ type Activation
     | ActivatedAt Time.Posix
 
 
+lightOnDurationMs =
+    1000
+
+
 type alias AlphabetBoard =
     { a : Activation
     , b : Activation

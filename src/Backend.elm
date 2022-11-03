@@ -3,9 +3,10 @@ module Backend exposing (..)
 import Html
 import Lamdera exposing (ClientId, SessionId)
 import Process
+import Task
 import Time
 import Types exposing (..)
-import Task
+
 
 type alias Model =
     BackendModel
@@ -32,9 +33,10 @@ update msg model =
     case msg of
         Flip c time ->
             let
-                 board = (updateBoard time c model.board)
+                board =
+                    updateBoard time c model.board
             in
-            ({model | board = board}, Lamdera.broadcast (NewBoard board))
+            ( { model | board = board }, Lamdera.broadcast (NewBoard board) )
 
         _ ->
             ( model, Cmd.none )
@@ -132,12 +134,13 @@ updateFromFrontend_ sessionId clientId msg model =
             ( model, Lamdera.sendToFrontend clientId (NewBoard model.board) )
 
         Click c ->
-            (model, Time.now |> Task.perform (Flip c))
+            ( model, Time.now |> Task.perform (Flip c) )
 
 
 updateFromFrontend : SessionId -> ClientId -> ToBackend -> Model -> ( Model, Cmd BackendMsg )
 updateFromFrontend sessionId clientId msg model =
-    let 
-        (model1, cmds) = updateFromFrontend_ sessionId clientId msg model
-    in 
-        (model1, Cmd.batch [cmds, Lamdera.sendToFrontend clientId (Log model1)])
+    let
+        ( model1, cmds ) =
+            updateFromFrontend_ sessionId clientId msg model
+    in
+    ( model1, Cmd.batch [ cmds, Lamdera.sendToFrontend clientId (Log model1) ] )

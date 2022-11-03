@@ -69,11 +69,6 @@ type BackendMsg
     | Flip Char Time.Posix
 
 
-type alias BackendModel =
-    { board : AlphabetBoard
-    }
-
-
 type ToFrontend
     = NewBoard AlphabetBoard
     | Log BackendModel
