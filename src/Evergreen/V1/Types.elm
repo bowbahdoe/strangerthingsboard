@@ -1,41 +1,49 @@
 module Evergreen.V1.Types exposing (..)
 
 import Browser
+import Time
 import Url
 
 
+type Activation
+    = NotActivated
+    | ActivatedAt Time.Posix
+
+
 type alias AlphabetBoard =
-    { a : Bool
-    , b : Bool
-    , c : Bool
-    , d : Bool
-    , e : Bool
-    , f : Bool
-    , g : Bool
-    , h : Bool
-    , i : Bool
-    , j : Bool
-    , k : Bool
-    , l : Bool
-    , m : Bool
-    , n : Bool
-    , o : Bool
-    , p : Bool
-    , q : Bool
-    , r : Bool
-    , s : Bool
-    , t : Bool
-    , u : Bool
-    , v : Bool
-    , w : Bool
-    , x : Bool
-    , y : Bool
-    , z : Bool
+    { a : Activation
+    , b : Activation
+    , c : Activation
+    , d : Activation
+    , e : Activation
+    , f : Activation
+    , g : Activation
+    , h : Activation
+    , i : Activation
+    , j : Activation
+    , k : Activation
+    , l : Activation
+    , m : Activation
+    , n : Activation
+    , o : Activation
+    , p : Activation
+    , q : Activation
+    , r : Activation
+    , s : Activation
+    , t : Activation
+    , u : Activation
+    , v : Activation
+    , w : Activation
+    , x : Activation
+    , y : Activation
+    , z : Activation
     }
 
 
 type alias FrontendModel =
-    AlphabetBoard
+    { board : AlphabetBoard
+    , time : Maybe Time.Posix
+    }
 
 
 type alias BackendModel =
@@ -46,7 +54,9 @@ type alias BackendModel =
 type FrontendMsg
     = UrlClicked Browser.UrlRequest
     | UrlChanged Url.Url
-    | ClickedOnFrontend Char
+    | TypedOnFrontend Char
+    | GotTime Time.Posix
+    | NoOpFrontend
 
 
 type ToBackend
@@ -56,7 +66,14 @@ type ToBackend
 
 type BackendMsg
     = NoOpBackendMsg
+    | Flip Char Time.Posix
+
+
+type alias BackendModel =
+    { board : AlphabetBoard
+    }
 
 
 type ToFrontend
     = NewBoard AlphabetBoard
+    | Log BackendModel
