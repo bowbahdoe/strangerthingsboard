@@ -46,7 +46,7 @@ app =
 
 init : Url.Url -> Nav.Key -> ( Model, Cmd FrontendMsg )
 init url key =
-    ( { board = defaultBoard, time = Nothing }
+    ( { board = defaultBoard, time = Nothing, lettersTyped = [] }
     , Cmd.batch [ Time.now |> Task.perform GotTime, Lamdera.sendToBackend WantBoard ]
     )
 
@@ -73,8 +73,8 @@ update msg model =
 updateFromBackend : ToFrontend -> Model -> ( Model, Cmd FrontendMsg )
 updateFromBackend msg model =
     case msg of
-        NewBoard board ->
-            ( { model | board = board }, Cmd.none )
+        NewBoard { board, lettersTyped } ->
+            ( { model | board = board, lettersTyped=lettersTyped }, Cmd.none )
 
         Log _ ->
             ( model, Cmd.none )
@@ -93,7 +93,7 @@ activated time activation c =
         Types.NotActivated ->
             ""
 
-
+letterStickAroundMs = 60000
 view : Model -> Browser.Document FrontendMsg
 view model =
     { title = ""
@@ -107,33 +107,13 @@ view model =
                     [ Letters.letters time model.board
                     , Html.h1 []
                         [ Html.text
-                            (String.toUpper (activated time model.board.a 'a'
-                                ++ activated time model.board.b 'b'
-                                ++ activated time model.board.c 'c'
-                                ++ activated time model.board.d 'd'
-                                ++ activated time model.board.e 'e'
-                                ++ activated time model.board.f 'f'
-                                ++ activated time model.board.g 'g'
-                                ++ activated time model.board.h 'h'
-                                ++ activated time model.board.i 'i'
-                                ++ activated time model.board.j 'j'
-                                ++ activated time model.board.k 'k'
-                                ++ activated time model.board.l 'l'
-                                ++ activated time model.board.m 'm'
-                                ++ activated time model.board.n 'n'
-                                ++ activated time model.board.o 'o'
-                                ++ activated time model.board.p 'p'
-                                ++ activated time model.board.q 'q'
-                                ++ activated time model.board.r 'r'
-                                ++ activated time model.board.s 's'
-                                ++ activated time model.board.t 't'
-                                ++ activated time model.board.u 'u'
-                                ++ activated time model.board.v 'v'
-                                ++ activated time model.board.w 'w'
-                                ++ activated time model.board.x 'x'
-                                ++ activated time model.board.y 'y'
-                                ++ activated time model.board.z 'z'
-                            ))
+                            (model.lettersTyped 
+
+                                |> List.filter (\(_, t) -> (Time.posixToMillis time - Time.posixToMillis t) < letterStickAroundMs)
+                                |> List.map (\(c, t) -> c)
+                                |> List.map (String.fromChar)
+                                |> List.reverse
+                                |> String.join " ")
                         ]
                     ]
                 ]

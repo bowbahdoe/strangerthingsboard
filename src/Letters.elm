@@ -47,7 +47,7 @@ light color time activation =
 
 click : Char -> Attribute Types.FrontendMsg
 click c =
-    attribute "abc" "def"
+    Events.onClick (Types.TypedOnFrontend c)
 
 
 letters : Time.Posix -> Types.AlphabetBoard -> Svg.Svg Types.FrontendMsg

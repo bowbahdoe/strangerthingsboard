@@ -23,7 +23,7 @@ app =
 
 init : ( Model, Cmd BackendMsg )
 init =
-    ( { board = defaultBoard }
+    ( { board = defaultBoard, lettersTyped = [] }
     , Cmd.none
     )
 
@@ -35,8 +35,10 @@ update msg model =
             let
                 board =
                     updateBoard time c model.board
+                lettersTyped = 
+                    List.take 300 ((c, time) :: model.lettersTyped)
             in
-            ( { model | board = board }, Lamdera.broadcast (NewBoard board) )
+            ( { model | board = board, lettersTyped = lettersTyped }, Lamdera.broadcast (NewBoard { board = board, lettersTyped = lettersTyped }) )
 
         _ ->
             ( model, Cmd.none )
@@ -131,7 +133,7 @@ updateFromFrontend_ : SessionId -> ClientId -> ToBackend -> Model -> ( Model, Cm
 updateFromFrontend_ sessionId clientId msg model =
     case msg of
         WantBoard ->
-            ( model, Lamdera.sendToFrontend clientId (NewBoard model.board) )
+            ( model, Lamdera.sendToFrontend clientId (NewBoard { board = model.board, lettersTyped = model.lettersTyped }) )
 
         Click c ->
             ( model, Time.now |> Task.perform (Flip c) )

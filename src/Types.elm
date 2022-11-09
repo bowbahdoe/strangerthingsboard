@@ -48,6 +48,7 @@ type alias AlphabetBoard =
 type alias FrontendModel =
     { board : AlphabetBoard
     , time : Maybe Time.Posix
+    , lettersTyped : List (Char, Time.Posix)
     }
 
 
@@ -83,6 +84,8 @@ defaultBoard =
 
 type alias BackendModel =
     { board : AlphabetBoard
+
+    , lettersTyped : List (Char, Time.Posix)
     }
 
 
@@ -105,5 +108,5 @@ type BackendMsg
 
 
 type ToFrontend
-    = NewBoard AlphabetBoard
+    = NewBoard  { board: AlphabetBoard, lettersTyped: List (Char, Time.Posix) }
     | Log BackendModel
