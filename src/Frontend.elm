@@ -93,7 +93,7 @@ activated time activation c =
         Types.NotActivated ->
             ""
 
-letterStickAroundMs = 60000
+letterStickAroundMs = 15000
 view : Model -> Browser.Document FrontendMsg
 view model =
     { title = ""
