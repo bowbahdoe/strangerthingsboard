@@ -74,7 +74,7 @@ updateFromBackend : ToFrontend -> Model -> ( Model, Cmd FrontendMsg )
 updateFromBackend msg model =
     case msg of
         NewBoard { board, lettersTyped } ->
-            ( { model | board = board, lettersTyped=lettersTyped }, Cmd.none )
+            ( { model | board = board, lettersTyped = lettersTyped }, Cmd.none )
 
         Log _ ->
             ( model, Cmd.none )
@@ -93,7 +93,11 @@ activated time activation c =
         Types.NotActivated ->
             ""
 
-letterStickAroundMs = 15000
+
+letterStickAroundMs =
+    15000
+
+
 view : Model -> Browser.Document FrontendMsg
 view model =
     { title = ""
@@ -107,13 +111,13 @@ view model =
                     [ Letters.letters time model.board
                     , Html.h1 []
                         [ Html.text
-                            (model.lettersTyped 
-
-                                |> List.filter (\(_, t) -> (Time.posixToMillis time - Time.posixToMillis t) < letterStickAroundMs)
-                                |> List.map (\(c, t) -> c)
-                                |> List.map (String.fromChar)
+                            (model.lettersTyped
+                                |> List.filter (\( _, t ) -> (Time.posixToMillis time - Time.posixToMillis t) < letterStickAroundMs)
+                                |> List.map (\( c, t ) -> c)
+                                |> List.map String.fromChar
                                 |> List.reverse
-                                |> String.join " ")
+                                |> String.join " "
+                            )
                         ]
                     ]
                 ]

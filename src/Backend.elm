@@ -35,8 +35,9 @@ update msg model =
             let
                 board =
                     updateBoard time c model.board
-                lettersTyped = 
-                    List.take 300 ((c, time) :: model.lettersTyped)
+
+                lettersTyped =
+                    List.take 300 (( c, time ) :: model.lettersTyped)
             in
             ( { model | board = board, lettersTyped = lettersTyped }, Lamdera.broadcast (NewBoard { board = board, lettersTyped = lettersTyped }) )
 
